@@ -5,10 +5,12 @@ using UnityEngine;
 public class TicketController : MonoBehaviour
 {
     static private GameObject player;
+    static private PointController pointController;
     private Vector3 offset = new Vector3(0, 1.5f, 0);
     private bool isPickedUp;
 
     public bool isDone = true;
+    static private int totalPoints;
 
     [SerializeField] private Material notDoneMaterial;
     [SerializeField] private Material doneMaterial;
@@ -18,6 +20,9 @@ public class TicketController : MonoBehaviour
     {
         if (player == null)
             player = GameObject.Find("Player");
+
+        if (pointController == null)
+            pointController = GameObject.Find("Point Canvas").GetComponent<PointController>();  
     }
 
     private void Update()
@@ -40,18 +45,26 @@ public class TicketController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Right") || other.CompareTag("Middle"))
+        if (other.CompareTag("Right"))
         {
-            StartCoroutine(StartTicket());
+            StartCoroutine(StartTicket(10));
+            isDone = false;
+            this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
+        }
+        if (other.CompareTag("Middle"))
+        {
+            StartCoroutine(StartTicket(20));
             isDone = false;
             this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
         }
     }
 
-    IEnumerator StartTicket()
+    IEnumerator StartTicket(int points)
     {
         yield return new WaitForSeconds(5);
         isDone = true;
         this.GetComponentInChildren<Renderer>().material = doneMaterial;
+        totalPoints += points;
+        pointController.UpdatePoints(totalPoints);
     }
 }

@@ -6,7 +6,7 @@ using TMPro;
 public class ClockController : MonoBehaviour
 {
 
-    static public int totalTime = 10;
+    static public int totalTime = 180;
     static public int timeLeft;
     private TextMeshProUGUI clockText;
 
