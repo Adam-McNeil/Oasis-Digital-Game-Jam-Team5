@@ -6,14 +6,14 @@ using TMPro;
 public class ClockController : MonoBehaviour
 {
 
-    private int totalTiime = 180;
-    private int timeLeft;
+    static public int totalTime = 10;
+    static public int timeLeft;
     private TextMeshProUGUI clockText;
 
     void Start()
     {
         clockText = GetComponentInChildren<TextMeshProUGUI>();
-        timeLeft = totalTiime;
+        timeLeft = totalTime;
         clockText.text = FormatTime(timeLeft);
         StartCoroutine(Clock());
     }
@@ -32,7 +32,12 @@ public class ClockController : MonoBehaviour
         int seconds = time % 60;
         if (seconds < 10)
         {
+            return minutes + ":0" + seconds;
+        }
+        else
+        {
             return minutes + ":" + seconds;
+
         }
     }
 }
