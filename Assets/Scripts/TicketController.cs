@@ -6,7 +6,7 @@ public class TicketController : MonoBehaviour
 {
     static private GameObject player;
     static private PointController pointController;
-    private Vector3 offset = new Vector3(0, 1.8f, 0);
+    private Vector3 offset = new Vector3(0, 3.5f, 0);
     private bool isPickedUp;
 
     public bool isDone = true;
