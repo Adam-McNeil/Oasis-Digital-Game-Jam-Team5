@@ -10,6 +10,7 @@ public class TicketController : MonoBehaviour
     private bool isPickedUp;
 
     public bool isDone = true;
+    private bool timerStarted = false;
     static private int totalPoints;
 
     [SerializeField] private Material notDoneMaterial;
@@ -45,15 +46,17 @@ public class TicketController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Right"))
+        if (other.CompareTag("Right") && !timerStarted)
         {
-            StartCoroutine(StartTicket(10));
+            timerStarted = true;
+            StartCoroutine(StartTicket(20));
             isDone = false;
             this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
         }
-        if (other.CompareTag("Middle"))
+        if (other.CompareTag("Middle") && !timerStarted)
         {
-            StartCoroutine(StartTicket(20));
+            timerStarted = true;
+            StartCoroutine(StartTicket(10));
             isDone = false;
             this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
         }
@@ -66,5 +69,7 @@ public class TicketController : MonoBehaviour
         this.GetComponentInChildren<Renderer>().material = doneMaterial;
         totalPoints += points;
         pointController.UpdatePoints(totalPoints);
+        GameObject.Find("Belt Sign").GetComponent<BeltControler>().UpdateColor(totalPoints);
+        timerStarted = false;
     }
 }
