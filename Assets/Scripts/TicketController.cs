@@ -8,6 +8,12 @@ public class TicketController : MonoBehaviour
     private Vector3 offset = new Vector3(0, 1.5f, 0);
     private bool isPickedUp;
 
+    public bool isDone = true;
+
+    [SerializeField] private Material notDoneMaterial;
+    [SerializeField] private Material doneMaterial;
+
+
     private void Start()
     {
         if (player == null)
@@ -30,5 +36,22 @@ public class TicketController : MonoBehaviour
     public void OnPutDown()
     {
         isPickedUp = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Right") || other.CompareTag("Middle"))
+        {
+            StartCoroutine(StartTicket());
+            isDone = false;
+            this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
+        }
+    }
+
+    IEnumerator StartTicket()
+    {
+        yield return new WaitForSeconds(5);
+        isDone = true;
+        this.GetComponentInChildren<Renderer>().material = doneMaterial;
     }
 }

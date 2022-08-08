@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
     private void PickUp()
     {
-        if (ticketToPickUp != null)
+        if (ticketToPickUp != null && ticketToPickUp.GetComponent<TicketController>().isDone)
         {
             Debug.Log("Ticket picked up");
             heldObject = ticketToPickUp;
