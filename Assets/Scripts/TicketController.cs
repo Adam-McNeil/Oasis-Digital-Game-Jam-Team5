@@ -69,6 +69,7 @@ public class TicketController : MonoBehaviour
         this.GetComponentInChildren<Renderer>().material = doneMaterial;
         totalPoints += points;
         pointController.UpdatePoints(totalPoints);
+        GameObject.Find("Belt Sign").GetComponent<BeltControler>().UpdateColor(totalPoints);
         timerStarted = false;
     }
 }

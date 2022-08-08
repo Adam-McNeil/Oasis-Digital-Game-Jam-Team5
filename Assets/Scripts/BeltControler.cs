@@ -31,12 +31,10 @@ public class BeltControler : MonoBehaviour
         else if (points < 300)
         {
             this.GetComponent<Renderer>().material = materials[4];
-
         }
         else 
         {
             this.GetComponent<Renderer>().material = materials[5];
-
         }
     }
 }
