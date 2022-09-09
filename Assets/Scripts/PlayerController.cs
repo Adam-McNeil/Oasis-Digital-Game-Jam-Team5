@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera camera;
     private Rigidbody rigidbody;
 
+    private Vector3 startPosition;
+
     private Vector2 changeInPosition; 
     Vector3 mousePos;
 
@@ -19,6 +21,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        startPosition = transform.position;
         rigidbody = this.GetComponent<Rigidbody>();
     }
 
@@ -27,6 +30,21 @@ public class PlayerController : MonoBehaviour
     {
         mousePos = Input.mousePosition;
         CheckForPickUpInput();
+    }
+
+    public void OnStartGame()
+    {
+
+    }
+
+    public void OnEndGame()
+    {
+
+    }
+
+    public void OnResetGame()
+    {
+        transform.position = startPosition;
     }
 
     private void FixedUpdate()

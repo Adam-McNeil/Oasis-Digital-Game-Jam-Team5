@@ -45,6 +45,11 @@ public class ClockController : MonoBehaviour
         clockText.text = FormatTime(timeLeft);
     }
 
+    public void OnResetGame()
+    {
+        ResetClock();
+    }
+
     // return a string given a int with the correct number of zero and colon so that the time is correctly displayed
     string FormatTime(int time)
     {

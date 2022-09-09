@@ -6,12 +6,13 @@ public class TicketController : MonoBehaviour
 {
     static private GameObject player;
     static private PointController pointController;
+    static private BeltControler beltController;
+    private Vector3 startPosition;
     private Vector3 offset = new Vector3(1.5f, 2f, 0);
     private bool isPickedUp;
     private int pointsOfLastAreaEntered;
 
     public bool isDone = true;
-    private bool timerStarted = false;
     static private int totalPoints;
 
     [SerializeField] private Material notDoneMaterial;
@@ -20,11 +21,16 @@ public class TicketController : MonoBehaviour
 
     private void Start()
     {
+        startPosition = transform.position;
+
         if (player == null)
             player = GameObject.Find("Player");
 
         if (pointController == null)
             pointController = GameObject.Find("Point Canvas").GetComponent<PointController>();
+
+        if (beltController == null)
+            beltController = GameObject.Find("Belt Sign").GetComponent<BeltControler>();
     }
     
     private void Update()
@@ -58,12 +64,10 @@ public class TicketController : MonoBehaviour
         }
     }
 
-    // start 
     void StartTicket()
     {
         if (pointsOfLastAreaEntered != 0)
         {
-            timerStarted = true;
             StartCoroutine(StartTicketCoroutine(pointsOfLastAreaEntered));
             isDone = false;
             this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
@@ -77,8 +81,15 @@ public class TicketController : MonoBehaviour
         this.GetComponentInChildren<Renderer>().material = doneMaterial;
         totalPoints += points;
         pointController.UpdatePoints(totalPoints);
-        GameObject.Find("Belt Sign").GetComponent<BeltControler>().UpdateColor(totalPoints);
-        timerStarted = false;
+        beltController.UpdateColor(totalPoints);
         pointsOfLastAreaEntered = 0;
+    }
+
+    public void OnResetGame()
+    {
+        transform.position = startPosition;
+        totalPoints = 0;
+        pointController.UpdatePoints(totalPoints);
+        beltController.UpdateColor(totalPoints);
     }
 }
