@@ -6,8 +6,9 @@ public class TicketController : MonoBehaviour
 {
     static private GameObject player;
     static private PointController pointController;
-    private Vector3 offset = new Vector3(0, 3.5f, 0);
+    private Vector3 offset = new Vector3(1.5f, 2f, 0);
     private bool isPickedUp;
+    private int pointsOfLastAreaEntered;
 
     public bool isDone = true;
     private bool timerStarted = false;
@@ -25,7 +26,7 @@ public class TicketController : MonoBehaviour
         if (pointController == null)
             pointController = GameObject.Find("Point Canvas").GetComponent<PointController>();
     }
-
+    
     private void Update()
     {
         if (isPickedUp)
@@ -42,27 +43,34 @@ public class TicketController : MonoBehaviour
     public void OnPutDown()
     {
         isPickedUp = false;
+        StartTicket();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Right") && !timerStarted)
+        if (other.CompareTag("Right"))
         {
-            timerStarted = true;
-            StartCoroutine(StartTicket(20));
-            isDone = false;
-            this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
+            pointsOfLastAreaEntered = 20;
         }
-        if (other.CompareTag("Middle") && !timerStarted)
+        if (other.CompareTag("Middle"))
+        {
+            pointsOfLastAreaEntered = 10;
+        }
+    }
+
+    // start 
+    void StartTicket()
+    {
+        if (pointsOfLastAreaEntered != 0)
         {
             timerStarted = true;
-            StartCoroutine(StartTicket(10));
+            StartCoroutine(StartTicketCoroutine(pointsOfLastAreaEntered));
             isDone = false;
             this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
         }
     }
 
-    IEnumerator StartTicket(int points)
+    IEnumerator StartTicketCoroutine(int points)
     {
         yield return new WaitForSeconds(5);
         isDone = true;
@@ -71,5 +79,6 @@ public class TicketController : MonoBehaviour
         pointController.UpdatePoints(totalPoints);
         GameObject.Find("Belt Sign").GetComponent<BeltControler>().UpdateColor(totalPoints);
         timerStarted = false;
+        pointsOfLastAreaEntered = 0;
     }
 }

@@ -1,19 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    [SerializeField] private Camera camera;
     private Rigidbody rigidbody;
 
-    private float xInput;
-    private float yInput;
+    private Vector2 changeInPosition; 
+    Vector3 mousePos;
 
-    private float speed = 3f;
-    private bool spaceWasPressed;
-    private GameObject ticketToPickUp = null;
-    private GameObject heldObject;
+    private float speed = 0.5f;
+    private GameObject ticketToPickUp = null;   // The ticket that the play would pick up if they pressed space can only be one
+    private GameObject heldObject;  // The ticket that the player is holding
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,11 +25,23 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        xInput = Input.GetAxis("Horizontal");
-        yInput = Input.GetAxis("Vertical");
+        mousePos = Input.mousePosition;
+        CheckForPickUpInput();
+    }
 
+    private void FixedUpdate()
+    {
+        changeInPosition = mousePos - camera.WorldToScreenPoint(this.transform.position);
+        rigidbody.AddForce(new Vector3(changeInPosition.x, 0, changeInPosition.y).normalized * speed, ForceMode.VelocityChange);
+        //Debug.Log((float)Math.Asin(rigidbody.velocity.z / rigidbody.velocity.magnitude) * 180);
+        //transform.eulerAngles = new Vector3(0, (float) Math.Atan(changeInPosition.x / changeInPosition.y)*180, 0);
+    }
+
+    #region PickUp
+    private void CheckForPickUpInput()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
-        { 
+        {
             if (heldObject == null)
             {
                 PickUp();
@@ -40,12 +53,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        rigidbody.AddForce(new Vector3(xInput, 0, yInput).normalized * speed, ForceMode.VelocityChange);
-    }
-
-    #region PickUp
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ticket"))
@@ -56,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Ticket") && other.gameObject == ticketToPickUp)
+        if (other.gameObject == ticketToPickUp)
         {
             ticketToPickUp = null;
         }
@@ -66,18 +73,16 @@ public class PlayerController : MonoBehaviour
     {
         if (ticketToPickUp != null && ticketToPickUp.GetComponent<TicketController>().isDone)
         {
-            Debug.Log("Ticket picked up");
             heldObject = ticketToPickUp;
             heldObject.GetComponent<TicketController>().OnPickUp();
         }
     }
 
+    // Will only run if heldObject is not null
     private void PutDown()
     {
-        Debug.Log("Ticket Put Down");
         heldObject.GetComponent<TicketController>().OnPutDown();
         heldObject = null;
-
     }
     #endregion
 }

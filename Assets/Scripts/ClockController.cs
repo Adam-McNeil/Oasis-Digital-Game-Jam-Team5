@@ -6,16 +6,14 @@ using TMPro;
 public class ClockController : MonoBehaviour
 {
 
-    static public int totalTime = 180;
+    static public int totalTime = 180;  // The total time of the game
     static public int timeLeft;
-    private TextMeshProUGUI clockText;
+    private TextMeshProUGUI clockText;  // Refence to the text gameobject that displays the time
 
     void Start()
     {
         clockText = GetComponentInChildren<TextMeshProUGUI>();
-        timeLeft = totalTime;
-        clockText.text = FormatTime(timeLeft);
-        StartCoroutine(Clock());
+        StartClock();
     }
 
     IEnumerator Clock()
@@ -23,9 +21,31 @@ public class ClockController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         timeLeft--;
         clockText.text = FormatTime(timeLeft);
+        if (timeLeft > 0)
+        {
+            IncrementClock();
+        }
+    }
+
+    // Resets the clock and starts the clock incrementing
+    void StartClock()
+    {
+        ResetClock();
+        IncrementClock();
+    }
+
+    void IncrementClock()
+    {
         StartCoroutine(Clock());
     }
 
+    void ResetClock()
+    {
+        timeLeft = totalTime;
+        clockText.text = FormatTime(timeLeft);
+    }
+
+    // return a string given a int with the correct number of zero and colon so that the time is correctly displayed
     string FormatTime(int time)
     {
         int minutes = time / 60;
