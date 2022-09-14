@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Video;
+ 
 public class StartVideo : MonoBehaviour
 {
-    private UnityEngine.Video.VideoPlayer videoPlayer; 
+    private VideoPlayer videoPlayer;
 
     void Start()
     {
-        videoPlayer = GetComponent<UnityEngine.Video.VideoPlayer>();
-        videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "gameJamIntoVideo.mp4");
+        videoPlayer = GetComponent<VideoPlayer>();
+        videoPlayer.url = System.IO.Path.Combine(Application.streamingAssetsPath, "gameJamIntroVideo.mp4");
+        videoPlayer.Play();
     }
 }
