@@ -8,10 +8,12 @@ public class ClockController : MonoBehaviour
 
     static public int totalTime = 180;  // The total time of the game
     static public int timeLeft;
+    static public GameController gameController;
     private TextMeshProUGUI clockText;  // Refence to the text gameobject that displays the time
 
     void Start()
     {
+        gameController = GameObject.Find("Game Controller").GetComponent<GameController>();
         clockText = GetComponentInChildren<TextMeshProUGUI>();
         StartClock();
     }
@@ -23,7 +25,11 @@ public class ClockController : MonoBehaviour
         clockText.text = FormatTime(timeLeft);
         if (timeLeft > 0)
         {
-            IncrementClock();
+            StartCoroutine(Clock());
+        }
+        else
+        {
+            gameController.OnEndGame();
         }
     }
 
@@ -31,11 +37,6 @@ public class ClockController : MonoBehaviour
     void StartClock()
     {
         ResetClock();
-        IncrementClock();
-    }
-
-    void IncrementClock()
-    {
         StartCoroutine(Clock());
     }
 
@@ -45,10 +46,23 @@ public class ClockController : MonoBehaviour
         clockText.text = FormatTime(timeLeft);
     }
 
+    #region Game Events
+    public void OnStartGame()
+    {
+        StartCoroutine(Clock());
+    }
+
     public void OnResetGame()
     {
         ResetClock();
+        StopAllCoroutines();
     }
+
+    public void OnEndGame()
+    {
+
+    }
+    #endregion
 
     // return a string given a int with the correct number of zero and colon so that the time is correctly displayed
     string FormatTime(int time)

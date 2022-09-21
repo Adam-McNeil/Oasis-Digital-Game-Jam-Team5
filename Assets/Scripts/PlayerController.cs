@@ -16,30 +16,40 @@ public class PlayerController : MonoBehaviour
     private float speed = 0.5f;
     private GameObject ticketToPickUp = null;   // The ticket that the play would pick up if they pressed space can only be one
     private GameObject heldObject;  // The ticket that the player is holding
-
-
-    // Start is called before the first frame update
+    private bool canMove = true;
     void Start()
     {
         startPosition = transform.position;
         rigidbody = this.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        mousePos = Input.mousePosition;
         CheckForPickUpInput();
     }
 
+    private void FixedUpdate()
+    {
+        if (Input.GetMouseButton(0) && canMove)
+        {
+            mousePos = Input.mousePosition;
+            changeInPosition = mousePos - camera.WorldToScreenPoint(this.transform.position);
+            rigidbody.AddForce(new Vector3(changeInPosition.x, 0, changeInPosition.y).normalized * speed, ForceMode.VelocityChange);
+        }
+        //Debug.Log((float)Math.Asin(rigidbody.velocity.z / rigidbody.velocity.magnitude) * 180);
+        //transform.eulerAngles = new Vector3(0, (float) Math.Atan(changeInPosition.x / changeInPosition.y)*180, 0);
+    }
+
+    #region Game Events
+
     public void OnStartGame()
     {
-
+        canMove = true;
     }
 
     public void OnEndGame()
     {
-
+        canMove = false;
     }
 
     public void OnResetGame()
@@ -47,13 +57,8 @@ public class PlayerController : MonoBehaviour
         transform.position = startPosition;
     }
 
-    private void FixedUpdate()
-    {
-        changeInPosition = mousePos - camera.WorldToScreenPoint(this.transform.position);
-        rigidbody.AddForce(new Vector3(changeInPosition.x, 0, changeInPosition.y).normalized * speed, ForceMode.VelocityChange);
-        //Debug.Log((float)Math.Asin(rigidbody.velocity.z / rigidbody.velocity.magnitude) * 180);
-        //transform.eulerAngles = new Vector3(0, (float) Math.Atan(changeInPosition.x / changeInPosition.y)*180, 0);
-    }
+    #endregion
+
 
     #region PickUp
     private void CheckForPickUpInput()

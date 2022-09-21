@@ -7,22 +7,22 @@ public class TicketController : MonoBehaviour
     static private GameObject player;
     static private PointController pointController;
     static private BeltControler beltController;
-    private Vector3 startPosition;
-    private Vector3 offset = new Vector3(1.5f, 2f, 0);
-    private bool isPickedUp;
-    private int pointsOfLastAreaEntered;
+    static private List<TicketObject> tickets = new List<TicketObject>();
+    static private int ticketsLength = 0;
+    static private Vector3 offset = new Vector3(1.5f, 2f, 0);
+    static private int totalPoints;
+    static private Color notDoneColor = new Color(1, 0, 0, 1);
+    static private Color doneColor = new Color(0, 1, 0, 1);
 
     public bool isDone = true;
-    static private int totalPoints;
-
-    [SerializeField] private Material notDoneMaterial;
-    [SerializeField] private Material doneMaterial;
+    private TicketObject ticketObject;
 
 
     private void Start()
     {
-        startPosition = transform.position;
-
+        ticketObject = new TicketObject(this.gameObject, this.GetComponent<TicketController>());
+        tickets.Add(ticketObject);
+        ticketsLength++;
         if (player == null)
             player = GameObject.Find("Player");
 
@@ -35,7 +35,7 @@ public class TicketController : MonoBehaviour
     
     private void Update()
     {
-        if (isPickedUp)
+        if (ticketObject.isPickedUp)
         {
             this.transform.position = player.transform.position + offset;
         }
@@ -43,12 +43,12 @@ public class TicketController : MonoBehaviour
 
     public void OnPickUp()
     {
-        isPickedUp = true;
+        ticketObject.isPickedUp = true;
     }
 
     public void OnPutDown()
     {
-        isPickedUp = false;
+        ticketObject.isPickedUp = false;
         StartTicket();
     }
 
@@ -56,40 +56,89 @@ public class TicketController : MonoBehaviour
     {
         if (other.CompareTag("Right"))
         {
-            pointsOfLastAreaEntered = 20;
+            ticketObject.pointsOfLastAreaEntered = 20;
         }
         if (other.CompareTag("Middle"))
         {
-            pointsOfLastAreaEntered = 10;
+            ticketObject.pointsOfLastAreaEntered = 10;
         }
     }
 
     void StartTicket()
     {
-        if (pointsOfLastAreaEntered != 0)
+        if (ticketObject.pointsOfLastAreaEntered != 0)
         {
-            StartCoroutine(StartTicketCoroutine(pointsOfLastAreaEntered));
+            StartCoroutine(StartTicketCoroutine());
             isDone = false;
-            this.GetComponentInChildren<Renderer>().material = notDoneMaterial;
+            this.GetComponentInChildren<Renderer>().material.color = notDoneColor;
         }
     }
 
-    IEnumerator StartTicketCoroutine(int points)
+    IEnumerator StartTicketCoroutine()
     {
         yield return new WaitForSeconds(5);
         isDone = true;
-        this.GetComponentInChildren<Renderer>().material = doneMaterial;
-        totalPoints += points;
+        this.GetComponentInChildren<Renderer>().material.color = doneColor;
+        totalPoints += ticketObject.pointsOfLastAreaEntered;
         pointController.UpdatePoints(totalPoints);
         beltController.UpdateColor(totalPoints);
-        pointsOfLastAreaEntered = 0;
+        ticketObject.pointsOfLastAreaEntered = 0;
     }
 
-    public void OnResetGame()
+    private void OnGameEndTicket()
     {
-        transform.position = startPosition;
+        StopAllCoroutines();
+    }
+
+    #region Game Events
+
+    static public void OnStartGame()
+    {
+
+    }
+
+    static public void OnEndGame()
+    {
+        // This ensures that the player can not gain any points after the game ended
+        foreach (TicketObject ticket in tickets)
+        {
+            ticket.ticketController.OnGameEndTicket();
+        }
+    }
+
+    static public void OnResetGame()
+    {
+        // This resets the position of every ticket
+        foreach (TicketObject ticket in tickets)
+        {
+            ticket.transform.position = ticket.startPosition;
+            ticket.gameObject.GetComponentInChildren<Renderer>().material.color = doneColor;
+        }
+        
         totalPoints = 0;
         pointController.UpdatePoints(totalPoints);
         beltController.UpdateColor(totalPoints);
+    }
+
+    #endregion
+
+    struct TicketObject
+    {
+        public TicketObject (GameObject gameObject, TicketController ticketController)
+        {
+            this.gameObject = gameObject;
+            this.ticketController = ticketController;
+            transform = gameObject.transform;
+            startPosition = transform.position;
+            isPickedUp = false;
+            pointsOfLastAreaEntered = 0;
+        }
+        
+        public GameObject gameObject;
+        public TicketController ticketController;
+        public Transform transform;
+        public Vector3 startPosition;
+        public bool isPickedUp;
+        public int pointsOfLastAreaEntered;
     }
 }
