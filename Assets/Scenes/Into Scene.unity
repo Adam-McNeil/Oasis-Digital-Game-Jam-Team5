@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!328 &75986601 stripped
+VideoPlayer:
+  m_CorrespondingSourceObject: {fileID: 9069510398665502479, guid: be4c86edeeef4e444b26c8867b26123b, type: 3}
+  m_PrefabInstance: {fileID: 1547013327}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &283080327
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,6 +613,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Video Player
       objectReference: {fileID: 0}
+    - target: {fileID: 9069510398665502479, guid: be4c86edeeef4e444b26c8867b26123b, type: 3}
+      propertyPath: m_Url
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9069510398665502479, guid: be4c86edeeef4e444b26c8867b26123b, type: 3}
+      propertyPath: m_VideoClip
+      value: 
+      objectReference: {fileID: 32900000, guid: c621a5b83ef75c34292f461301fc9c25, type: 3}
+    - target: {fileID: 9069510398665502479, guid: be4c86edeeef4e444b26c8867b26123b, type: 3}
+      propertyPath: m_DataSource
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9069510398665502479, guid: be4c86edeeef4e444b26c8867b26123b, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9095107713853703562, guid: be4c86edeeef4e444b26c8867b26123b, type: 3}
+      propertyPath: videoPlayer
+      value: 
+      objectReference: {fileID: 75986601}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be4c86edeeef4e444b26c8867b26123b, type: 3}
 --- !u!1 &1996872548
