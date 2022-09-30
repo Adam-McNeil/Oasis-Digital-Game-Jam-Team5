@@ -10,7 +10,7 @@ public class DestroyVideo : MonoBehaviour
 
     private bool wasSkipVideoKeyCodePressed;
     private bool skipVideoKeyWasPressedWithinTimeRange = false;
-    private KeyCode skipVidoeKeyCode = KeyCode.Escape;  // The key to skip the into video
+    private KeyCode skipVidoeKeyCode = KeyCode.Tab;  // The key to skip the into video
     private float skipTimeDuration = 5f;    // How long the user has to confirm skipping after pressing the button once
     [SerializeField] private string sceneToLoadName = "Main";   // Name of the scene to load
     [SerializeField] private TextMeshProUGUI confirmSkipText;   // Refence to the text that tells the user that they can skip with the skipVideoKeyCode

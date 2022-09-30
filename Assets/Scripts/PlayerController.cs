@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private float speed = 0.5f;
     private GameObject ticketToPickUp = null;   // The ticket that the play would pick up if they pressed space can only be one
     private GameObject heldObject;  // The ticket that the player is holding
-    private bool canMove = true;
+    private bool canMove = false;
     void Start()
     {
         startPosition = transform.position;

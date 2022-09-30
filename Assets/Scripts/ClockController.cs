@@ -15,7 +15,6 @@ public class ClockController : MonoBehaviour
     {
         gameController = GameObject.Find("Game Controller").GetComponent<GameController>();
         clockText = GetComponentInChildren<TextMeshProUGUI>();
-        StartClock();
     }
 
     IEnumerator Clock()
@@ -29,7 +28,7 @@ public class ClockController : MonoBehaviour
         }
         else
         {
-            gameController.OnEndGame();
+            gameController.EndGame();
         }
     }
 
